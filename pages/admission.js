@@ -96,7 +96,7 @@ const admission = () => {
                 birthDate={admission.birthDate}
                 mothersName={admission.mothersName}
                 fathersName={admission.fathersName}
-                classs={admission.class}
+                classs={admission.classs}
                 school={admission.school}
                 board={admission.board}
                 prevMarks={admission.prevMarks}
@@ -122,7 +122,7 @@ const admission = () => {
                 birthDate={admission.birthDate}
                 mothersName={admission.mothersName}
                 fathersName={admission.fathersName}
-                classs={admission.class}
+                classs={admission.classs}
                 school={admission.school}
                 board={admission.board}
                 prevMarks={admission.prevMarks}
@@ -148,7 +148,7 @@ const admission = () => {
                 birthDate={admission.birthDate}
                 mothersName={admission.mothersName}
                 fathersName={admission.fathersName}
-                classs={admission.class}
+                classs={admission.classs}
                 school={admission.school}
                 board={admission.board}
                 prevMarks={admission.prevMarks}
