@@ -86,87 +86,90 @@ const admission = () => {
       </div>
 
       <div className="mx-32">
-        {admissions.map((admission, index) => {
-          if (admissionTaken === "") {
-            return (
-              <EachAdmission
-                key={index}
-                name={admission.name}
-                gender={admission.gender}
-                birthDate={admission.birthDate}
-                mothersName={admission.mothersName}
-                fathersName={admission.fathersName}
-                classs={admission.classs}
-                school={admission.school}
-                board={admission.board}
-                prevMarks={admission.prevMarks}
-                contact={admission.contact}
-                fathersContact={admission.fathersContact}
-                emailId={admission.emailId}
-                address={admission.address}
-                admitted={admission.admitted}
-                myUpdateFunction={() =>
-                  updateOneAdmission({
-                    ...admission,
-                    admitted: !admission.admitted,
-                  })
-                }
-              />
-            );
-          } else if (admissionTaken === "taken" && admission.admitted) {
-            return (
-              <EachAdmission
-                key={index}
-                name={admission.name}
-                gender={admission.gender}
-                birthDate={admission.birthDate}
-                mothersName={admission.mothersName}
-                fathersName={admission.fathersName}
-                classs={admission.classs}
-                school={admission.school}
-                board={admission.board}
-                prevMarks={admission.prevMarks}
-                contact={admission.contact}
-                fathersContact={admission.fathersContact}
-                emailId={admission.emailId}
-                address={admission.address}
-                admitted={admission.admitted}
-                myUpdateFunction={() =>
-                  updateOneAdmission({
-                    ...admission,
-                    admitted: !admission.admitted,
-                  })
-                }
-              />
-            );
-          } else if (admissionTaken === "nottaken" && !admission.admitted) {
-            return (
-              <EachAdmission
-                key={index}
-                name={admission.name}
-                gender={admission.gender}
-                birthDate={admission.birthDate}
-                mothersName={admission.mothersName}
-                fathersName={admission.fathersName}
-                classs={admission.classs}
-                school={admission.school}
-                board={admission.board}
-                prevMarks={admission.prevMarks}
-                contact={admission.contact}
-                fathersContact={admission.fathersContact}
-                emailId={admission.emailId}
-                address={admission.address}
-                admitted={admission.admitted}
-                myUpdateFunction={() =>
-                  updateOneAdmission({
-                    ...admission,
-                    admitted: !admission.admitted,
-                  })
-                }
-              />
-            );
-          }
-        })}
+        {admissions
+          .slice(0)
+          .reverse()
+          .map((admission, index) => {
+            if (admissionTaken === "") {
+              return (
+                <EachAdmission
+                  key={index}
+                  name={admission.name}
+                  gender={admission.gender}
+                  birthDate={admission.birthDate}
+                  mothersName={admission.mothersName}
+                  fathersName={admission.fathersName}
+                  classs={admission.classs}
+                  school={admission.school}
+                  board={admission.board}
+                  prevMarks={admission.prevMarks}
+                  contact={admission.contact}
+                  fathersContact={admission.fathersContact}
+                  emailId={admission.emailId}
+                  address={admission.address}
+                  admitted={admission.admitted}
+                  myUpdateFunction={() =>
+                    updateOneAdmission({
+                      ...admission,
+                      admitted: !admission.admitted,
+                    })
+                  }
+                />
+              );
+            } else if (admissionTaken === "taken" && admission.admitted) {
+              return (
+                <EachAdmission
+                  key={index}
+                  name={admission.name}
+                  gender={admission.gender}
+                  birthDate={admission.birthDate}
+                  mothersName={admission.mothersName}
+                  fathersName={admission.fathersName}
+                  classs={admission.classs}
+                  school={admission.school}
+                  board={admission.board}
+                  prevMarks={admission.prevMarks}
+                  contact={admission.contact}
+                  fathersContact={admission.fathersContact}
+                  emailId={admission.emailId}
+                  address={admission.address}
+                  admitted={admission.admitted}
+                  myUpdateFunction={() =>
+                    updateOneAdmission({
+                      ...admission,
+                      admitted: !admission.admitted,
+                    })
+                  }
+                />
+              );
+            } else if (admissionTaken === "nottaken" && !admission.admitted) {
+              return (
+                <EachAdmission
+                  key={index}
+                  name={admission.name}
+                  gender={admission.gender}
+                  birthDate={admission.birthDate}
+                  mothersName={admission.mothersName}
+                  fathersName={admission.fathersName}
+                  classs={admission.classs}
+                  school={admission.school}
+                  board={admission.board}
+                  prevMarks={admission.prevMarks}
+                  contact={admission.contact}
+                  fathersContact={admission.fathersContact}
+                  emailId={admission.emailId}
+                  address={admission.address}
+                  admitted={admission.admitted}
+                  myUpdateFunction={() =>
+                    updateOneAdmission({
+                      ...admission,
+                      admitted: !admission.admitted,
+                    })
+                  }
+                />
+              );
+            }
+          })}
       </div>
     </div>
   );

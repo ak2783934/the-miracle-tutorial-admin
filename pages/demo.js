@@ -86,54 +86,57 @@ const demo = () => {
       </div>
 
       <div className="mx-32">
-        {demos.map((demo, index) => {
-          if (demoNotTaken === "") {
-            return (
-              <EachDemo
-                name={demo.name}
-                emailId={demo.emailId}
-                classs={demo.class}
-                contact={demo.contact}
-                board={demo.board}
-                demoTaken={demo.demoTaken}
-                myUpdateFunction={() =>
-                  updateOneDemo({ ...demo, demoTaken: !demo.demoTaken })
-                }
-                key={index}
-              />
-            );
-          } else if (demoNotTaken === "taken" && demo.demoTaken) {
-            return (
-              <EachDemo
-                name={demo.name}
-                emailId={demo.emailId}
-                classs={demo.class}
-                contact={demo.contact}
-                board={demo.board}
-                demoTaken={demo.demoTaken}
-                myUpdateFunction={() =>
-                  updateOneDemo({ ...demo, demoTaken: !demo.demoTaken })
-                }
-                key={index}
-              />
-            );
-          } else if (demoNotTaken === "nottaken" && !demo.demoTaken) {
-            return (
-              <EachDemo
-                name={demo.name}
-                emailId={demo.emailId}
-                classs={demo.class}
-                contact={demo.contact}
-                board={demo.board}
-                demoTaken={demo.demoTaken}
-                myUpdateFunction={() =>
-                  updateOneDemo({ ...demo, demoTaken: !demo.demoTaken })
-                }
-                key={index}
-              />
-            );
-          }
-        })}
+        {demos
+          .slice(0)
+          .reverse()
+          .map((demo, index) => {
+            if (demoNotTaken === "") {
+              return (
+                <EachDemo
+                  name={demo.name}
+                  emailId={demo.emailId}
+                  classs={demo.class}
+                  contact={demo.contact}
+                  board={demo.board}
+                  demoTaken={demo.demoTaken}
+                  myUpdateFunction={() =>
+                    updateOneDemo({ ...demo, demoTaken: !demo.demoTaken })
+                  }
+                  key={index}
+                />
+              );
+            } else if (demoNotTaken === "taken" && demo.demoTaken) {
+              return (
+                <EachDemo
+                  name={demo.name}
+                  emailId={demo.emailId}
+                  classs={demo.class}
+                  contact={demo.contact}
+                  board={demo.board}
+                  demoTaken={demo.demoTaken}
+                  myUpdateFunction={() =>
+                    updateOneDemo({ ...demo, demoTaken: !demo.demoTaken })
+                  }
+                  key={index}
+                />
+              );
+            } else if (demoNotTaken === "nottaken" && !demo.demoTaken) {
+              return (
+                <EachDemo
+                  name={demo.name}
+                  emailId={demo.emailId}
+                  classs={demo.class}
+                  contact={demo.contact}
+                  board={demo.board}
+                  demoTaken={demo.demoTaken}
+                  myUpdateFunction={() =>
+                    updateOneDemo({ ...demo, demoTaken: !demo.demoTaken })
+                  }
+                  key={index}
+                />
+              );
+            }
+          })}
       </div>
     </div>
   );

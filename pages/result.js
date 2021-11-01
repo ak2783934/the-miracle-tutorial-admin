@@ -141,17 +141,20 @@ const result = () => {
           <div className="pr-28">DATE</div>
         </div>
         <div>
-          {myresult.map((items, index) => {
-            return (
-              <EachResult
-                link={items.link}
-                result={items.result}
-                date={items.createdAt}
-                key={index}
-                myDeleteFunction={() => deleteOneNotice(items._id)}
-              />
-            );
-          })}
+          {myresult
+            .slice(0)
+            .reverse()
+            .map((items, index) => {
+              return (
+                <EachResult
+                  link={items.link}
+                  result={items.result}
+                  date={items.createdAt}
+                  key={index}
+                  myDeleteFunction={() => deleteOneNotice(items._id)}
+                />
+              );
+            })}
         </div>
       </div>
     </div>

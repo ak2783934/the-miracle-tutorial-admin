@@ -142,14 +142,17 @@ const gallery = () => {
       </div>
 
       <div>
-        {events?.map((val, index) => (
-          <Event
-            eventName={val.eventName}
-            images={val.images}
-            key={index}
-            myDeleteFunction={() => deleteOneEvent(val._id)}
-          />
-        ))}
+        {events
+          ?.slice(0)
+          .reverse()
+          .map((val, index) => (
+            <Event
+              eventName={val.eventName}
+              images={val.images}
+              key={index}
+              myDeleteFunction={() => deleteOneEvent(val._id)}
+            />
+          ))}
       </div>
     </div>
   );
