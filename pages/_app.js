@@ -12,7 +12,6 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     setRedirectUri(window.location.origin);
   }, []);
-  console.log(redirectUri);
   return (
     <Auth0Provider
       domain={domain}
