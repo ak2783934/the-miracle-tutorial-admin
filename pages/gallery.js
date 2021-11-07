@@ -5,6 +5,9 @@ import Head from "next/head";
 import { api } from "../pages/api/index";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import LoginButton from "../components/loginButton";
+import LogoutButton from "../components/logoutButton";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const gallery = () => {
   const [events, setEvents] = useState([]);
@@ -74,88 +77,95 @@ const gallery = () => {
     },
   });
 
-  return (
-    <div className="w-full h-full min-h-screen pb-5 bg-blue-100">
-      <Head>
-        <title>The miracle tutorial: Admin</title>
-        <link rel="icon" href="/tmt.png" />
-      </Head>
-      <div className="flex flex-row justify-between py-10 mx-32 text-center">
-        <Link href="/">
-          <a>
-            <div className="h-full px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-600">
-              {"<-"} Back
+  const { isLoading, isAuthenticated } = useAuth0();
+  if (isLoading) return <div className="text-2xl">Loading...</div>;
+
+  if (!isAuthenticated) return <LoginButton />;
+
+  if (isAuthenticated)
+    return (
+      <div className="w-full h-full min-h-screen pb-5 bg-blue-100">
+        <Head>
+          <title>The miracle tutorial: Admin</title>
+          <link rel="icon" href="/tmt.png" />
+        </Head>
+        <div className="flex flex-row justify-between py-10 mx-32 text-center">
+          <Link href="/">
+            <a>
+              <div className="h-full px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-600">
+                {"<-"} Back
+              </div>
+            </a>
+          </Link>
+          <div className="mx-auto text-4xl font-bold text-red-500">
+            MANAGE GALLERY
+          </div>
+          <LogoutButton />
+        </div>
+
+        <div className="w-2/3 mx-auto">
+          <form onSubmit={formik.handleSubmit}>
+            <div className="flex flex-row">
+              <input
+                type="text"
+                placeholder="Name of event"
+                className="w-1/2 h-8 px-3 mr-4 rounded"
+                id="eventName"
+                name="eventName"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.eventName}
+              />
+              {formik.touched.eventName && formik.errors.eventName ? (
+                <div>{formik.errors.eventName}</div>
+              ) : null}
+              <input
+                type="file"
+                className="w-1/2 h-8 ml-4 rounded"
+                id="images"
+                name="images"
+                onChange={(event) => {
+                  const file = event.target.files;
+                  let myFiles = Array.from(file);
+                  formik.setFieldValue("images", myFiles);
+                  console.log(myFiles);
+                }}
+                onBlur={formik.handleBlur}
+                accept="image/png, image/jpeg, image/jpg"
+                multiple
+              />
             </div>
-          </a>
-        </Link>
-        <div className="mx-auto text-4xl font-bold text-red-500">
-          MANAGE GALLERY
+            <div className="flex flex-row justify-center py-8">
+              <button
+                className="w-1/3 py-1 bg-green-400 rounded-xl hover:bg-green-500"
+                type="submit"
+              >
+                SUBMIT
+              </button>
+            </div>
+            {submitted && (
+              <div className="text-sm text-center text-green-700">
+                New Event Added!
+              </div>
+            )}
+          </form>
+        </div>
+
+        <div>
+          {events
+            ?.slice(0)
+            .reverse()
+            .map((val, index) => (
+              <Event
+                eventName={val.eventName}
+                images={val.images}
+                key={index}
+                myDeleteFunction={() => deleteOneEvent(val._id)}
+              />
+            ))}
         </div>
       </div>
-
-      <div className="w-2/3 mx-auto">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="flex flex-row">
-            <input
-              type="text"
-              placeholder="Name of event"
-              className="w-1/2 h-8 px-3 mr-4 rounded"
-              id="eventName"
-              name="eventName"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.eventName}
-            />
-            {formik.touched.eventName && formik.errors.eventName ? (
-              <div>{formik.errors.eventName}</div>
-            ) : null}
-            <input
-              type="file"
-              className="w-1/2 h-8 ml-4 rounded"
-              id="images"
-              name="images"
-              onChange={(event) => {
-                const file = event.target.files;
-                let myFiles = Array.from(file);
-                formik.setFieldValue("images", myFiles);
-                console.log(myFiles);
-              }}
-              onBlur={formik.handleBlur}
-              accept="image/png, image/jpeg, image/jpg"
-              multiple
-            />
-          </div>
-          <div className="flex flex-row justify-center py-8">
-            <button
-              className="w-1/3 py-1 bg-green-400 rounded-xl hover:bg-green-500"
-              type="submit"
-            >
-              SUBMIT
-            </button>
-          </div>
-          {submitted && (
-            <div className="text-sm text-center text-green-700">
-              New Event Added!
-            </div>
-          )}
-        </form>
-      </div>
-
-      <div>
-        {events
-          ?.slice(0)
-          .reverse()
-          .map((val, index) => (
-            <Event
-              eventName={val.eventName}
-              images={val.images}
-              key={index}
-              myDeleteFunction={() => deleteOneEvent(val._id)}
-            />
-          ))}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default gallery;

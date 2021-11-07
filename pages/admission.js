@@ -3,6 +3,10 @@ import Link from "next/link";
 import Head from "next/head";
 import EachAdmission from "../components/EachAdmission";
 import { api } from "../pages/api/index";
+import LoginButton from "../components/loginButton";
+import LogoutButton from "../components/logoutButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "../components/loading";
 
 const admission = () => {
   const [admissions, setAdmissions] = useState([]);
@@ -39,140 +43,147 @@ const admission = () => {
     getAllAdmission();
   }, []);
 
-  return (
-    <div className="w-full h-full min-h-screen pb-5 bg-blue-100">
-      <Head>
-        <title>The miracle tutorial: Admin</title>
-        <link rel="icon" href="/tmt.png" />
-      </Head>
-      <div className="flex flex-row justify-between py-10 mx-32 text-center">
-        <Link href="/">
-          <a>
-            <div className="h-full px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-600">
-              {"<-"} Back
-            </div>
-          </a>
-        </Link>
-        <div className="mx-auto text-4xl font-bold text-red-500">
-          MANAGE ADMISSION
-        </div>
-      </div>
+  const { isLoading, isAuthenticated } = useAuth0();
+  if (isLoading) return <Loading />;
 
-      <div className="flex flex-row justify-between mx-32">
-        <div
-          className={
-            admissionTaken === "taken"
-              ? "py-2 mx-5 text-xl font-bold text-white px-7 bg-red-600 rounded-xl hover:cursor-pointer"
-              : "py-2 mx-5 text-xl font-bold text-white px-7 bg-admitted rounded-xl hover:cursor-pointer"
-          }
-          onClick={() => {
-            setAdmissiontaken("taken");
-          }}
-        >
-          Admitted
-        </div>
-        <div
-          className={
-            admissionTaken === "nottaken"
-              ? "py-2 mx-5 text-xl bg-red-600 font-bold text-white px-7 rounded-xl hover:cursor-pointer"
-              : "py-2 mx-5 text-xl font-bold text-white bg-admitted px-7 rounded-xl hover:cursor-pointer"
-          }
-          onClick={() => {
-            setAdmissiontaken("nottaken");
-          }}
-        >
-          Not-Admitted
-        </div>
-      </div>
+  if (!isAuthenticated) return <LoginButton />;
 
-      <div className="mx-32">
-        {admissions
-          .slice(0)
-          .reverse()
-          .map((admission, index) => {
-            if (admissionTaken === "") {
-              return (
-                <EachAdmission
-                  key={index}
-                  name={admission.name}
-                  gender={admission.gender}
-                  birthDate={admission.birthDate}
-                  mothersName={admission.mothersName}
-                  fathersName={admission.fathersName}
-                  classs={admission.classs}
-                  school={admission.school}
-                  board={admission.board}
-                  prevMarks={admission.prevMarks}
-                  contact={admission.contact}
-                  fathersContact={admission.fathersContact}
-                  emailId={admission.emailId}
-                  address={admission.address}
-                  admitted={admission.admitted}
-                  myUpdateFunction={() =>
-                    updateOneAdmission({
-                      ...admission,
-                      admitted: !admission.admitted,
-                    })
-                  }
-                />
-              );
-            } else if (admissionTaken === "taken" && admission.admitted) {
-              return (
-                <EachAdmission
-                  key={index}
-                  name={admission.name}
-                  gender={admission.gender}
-                  birthDate={admission.birthDate}
-                  mothersName={admission.mothersName}
-                  fathersName={admission.fathersName}
-                  classs={admission.classs}
-                  school={admission.school}
-                  board={admission.board}
-                  prevMarks={admission.prevMarks}
-                  contact={admission.contact}
-                  fathersContact={admission.fathersContact}
-                  emailId={admission.emailId}
-                  address={admission.address}
-                  admitted={admission.admitted}
-                  myUpdateFunction={() =>
-                    updateOneAdmission({
-                      ...admission,
-                      admitted: !admission.admitted,
-                    })
-                  }
-                />
-              );
-            } else if (admissionTaken === "nottaken" && !admission.admitted) {
-              return (
-                <EachAdmission
-                  key={index}
-                  name={admission.name}
-                  gender={admission.gender}
-                  birthDate={admission.birthDate}
-                  mothersName={admission.mothersName}
-                  fathersName={admission.fathersName}
-                  classs={admission.classs}
-                  school={admission.school}
-                  board={admission.board}
-                  prevMarks={admission.prevMarks}
-                  contact={admission.contact}
-                  fathersContact={admission.fathersContact}
-                  emailId={admission.emailId}
-                  address={admission.address}
-                  admitted={admission.admitted}
-                  myUpdateFunction={() =>
-                    updateOneAdmission({
-                      ...admission,
-                      admitted: !admission.admitted,
-                    })
-                  }
-                />
-              );
+  if (isAuthenticated)
+    return (
+      <div className="w-full h-full min-h-screen pb-5 bg-blue-100">
+        <Head>
+          <title>The miracle tutorial: Admin</title>
+          <link rel="icon" href="/tmt.png" />
+        </Head>
+        <div className="flex flex-row justify-between py-10 mx-32 text-center">
+          <Link href="/">
+            <a>
+              <div className="h-full px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-600">
+                {"<-"} Back
+              </div>
+            </a>
+          </Link>
+          <div className="mx-auto text-4xl font-bold text-red-500">
+            MANAGE ADMISSION
+          </div>
+          <LogoutButton />
+        </div>
+
+        <div className="flex flex-row justify-between mx-32">
+          <div
+            className={
+              admissionTaken === "taken"
+                ? "py-2 mx-5 text-xl font-bold text-white px-7 bg-red-600 rounded-xl hover:cursor-pointer"
+                : "py-2 mx-5 text-xl font-bold text-white px-7 bg-admitted rounded-xl hover:cursor-pointer"
             }
-          })}
+            onClick={() => {
+              setAdmissiontaken("taken");
+            }}
+          >
+            Admitted
+          </div>
+          <div
+            className={
+              admissionTaken === "nottaken"
+                ? "py-2 mx-5 text-xl bg-red-600 font-bold text-white px-7 rounded-xl hover:cursor-pointer"
+                : "py-2 mx-5 text-xl font-bold text-white bg-admitted px-7 rounded-xl hover:cursor-pointer"
+            }
+            onClick={() => {
+              setAdmissiontaken("nottaken");
+            }}
+          >
+            Not-Admitted
+          </div>
+        </div>
+
+        <div className="mx-32">
+          {admissions
+            .slice(0)
+            .reverse()
+            .map((admission, index) => {
+              if (admissionTaken === "") {
+                return (
+                  <EachAdmission
+                    key={index}
+                    name={admission.name}
+                    gender={admission.gender}
+                    birthDate={admission.birthDate}
+                    mothersName={admission.mothersName}
+                    fathersName={admission.fathersName}
+                    classs={admission.classs}
+                    school={admission.school}
+                    board={admission.board}
+                    prevMarks={admission.prevMarks}
+                    contact={admission.contact}
+                    fathersContact={admission.fathersContact}
+                    emailId={admission.emailId}
+                    address={admission.address}
+                    admitted={admission.admitted}
+                    myUpdateFunction={() =>
+                      updateOneAdmission({
+                        ...admission,
+                        admitted: !admission.admitted,
+                      })
+                    }
+                  />
+                );
+              } else if (admissionTaken === "taken" && admission.admitted) {
+                return (
+                  <EachAdmission
+                    key={index}
+                    name={admission.name}
+                    gender={admission.gender}
+                    birthDate={admission.birthDate}
+                    mothersName={admission.mothersName}
+                    fathersName={admission.fathersName}
+                    classs={admission.classs}
+                    school={admission.school}
+                    board={admission.board}
+                    prevMarks={admission.prevMarks}
+                    contact={admission.contact}
+                    fathersContact={admission.fathersContact}
+                    emailId={admission.emailId}
+                    address={admission.address}
+                    admitted={admission.admitted}
+                    myUpdateFunction={() =>
+                      updateOneAdmission({
+                        ...admission,
+                        admitted: !admission.admitted,
+                      })
+                    }
+                  />
+                );
+              } else if (admissionTaken === "nottaken" && !admission.admitted) {
+                return (
+                  <EachAdmission
+                    key={index}
+                    name={admission.name}
+                    gender={admission.gender}
+                    birthDate={admission.birthDate}
+                    mothersName={admission.mothersName}
+                    fathersName={admission.fathersName}
+                    classs={admission.classs}
+                    school={admission.school}
+                    board={admission.board}
+                    prevMarks={admission.prevMarks}
+                    contact={admission.contact}
+                    fathersContact={admission.fathersContact}
+                    emailId={admission.emailId}
+                    address={admission.address}
+                    admitted={admission.admitted}
+                    myUpdateFunction={() =>
+                      updateOneAdmission({
+                        ...admission,
+                        admitted: !admission.admitted,
+                      })
+                    }
+                  />
+                );
+              }
+            })}
+        </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default admission;
