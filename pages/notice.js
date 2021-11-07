@@ -5,6 +5,10 @@ import EachNotice from "../components/EachNotice";
 import { api } from "../pages/api/index";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import LoginButton from "../components/loginButton";
+import LogoutButton from "../components/logoutButton";
+import { useAuth0 } from "@auth0/auth0-react";
+import Loading from "../components/loading";
 
 const notice = () => {
   const [mynotice, setMynotice] = useState([]);
@@ -68,97 +72,104 @@ const notice = () => {
     },
   });
 
-  return (
-    <div className="w-full h-full min-h-screen bg-blue-100">
-      <Head>
-        <title>The miracle tutorial: Admin</title>
-        <link rel="icon" href="/tmt.png" />
-      </Head>
-      <div className="flex flex-row justify-between py-10 mx-32 text-center">
-        <Link href="/">
-          <a>
-            <div className="h-full px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-600">
-              {"<-"} Back
-            </div>
-          </a>
-        </Link>
-        <div className="mx-auto text-4xl font-bold text-red-500">
-          MANAGE NOTICE
-        </div>
-      </div>
+  const { isLoading, isAuthenticated } = useAuth0();
+  if (isLoading) return <Loading />;
 
-      <div className="mx-32 my-10">
-        <form className="flex flex-row" onSubmit={formik.handleSubmit}>
-          <div className="w-1/2 px-4">
-            <textarea
-              type="text"
-              placeholder="Enter notice"
-              className="w-full h-32 pt-2 pl-4 ml-4 rounded"
-              id="notice"
-              name="notice"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.notice}
-            />
+  if (!isAuthenticated) return <LoginButton />;
+
+  if (isAuthenticated)
+    return (
+      <div className="w-full h-full min-h-screen bg-blue-100">
+        <Head>
+          <title>The miracle tutorial: Admin</title>
+          <link rel="icon" href="/tmt.png" />
+        </Head>
+        <div className="flex flex-row justify-between py-10 mx-32 text-center">
+          <Link href="/">
+            <a>
+              <div className="h-full px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-600">
+                {"<-"} Back
+              </div>
+            </a>
+          </Link>
+          <div className="mx-auto text-4xl font-bold text-red-500">
+            MANAGE NOTICE
           </div>
-          <div className="flex flex-col justify-between w-1/2 px-10">
-            <div className="">
-              <input
-                type="file"
-                accept="image/png, image/jpeg, image/jpg"
-                className="h-8"
-                id="image"
-                name="image"
+          <LogoutButton />
+        </div>
+
+        <div className="mx-32 my-10">
+          <form className="flex flex-row" onSubmit={formik.handleSubmit}>
+            <div className="w-1/2 px-4">
+              <textarea
+                type="text"
+                placeholder="Enter notice"
+                className="w-full h-32 pt-2 pl-4 ml-4 rounded"
+                id="notice"
+                name="notice"
+                onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                onChange={(event) => {
-                  const file = event.target.files;
-                  let myFiles = Array.from(file);
-                  formik.setFieldValue("image", myFiles[0]);
-                  console.log(myFiles);
-                }}
+                value={formik.values.notice}
               />
             </div>
-            <div>
-              <button
-                className="h-8 mb-1 font-bold bg-green-400 rounded w-60"
-                type="submit"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
-        {submitted && (
-          <div className="text-sm text-center text-green-700">
-            New Notice Added!
-          </div>
-        )}
-      </div>
-
-      <div className="pb-40 mx-32">
-        <div className="flex flex-row justify-between py-3 text-xl font-bold bg-blue-400 shadow-2xl">
-          <div className="px-4">NOTICE</div>
-          <div className="pr-28">DATE</div>
-        </div>
-        <div>
-          {mynotice
-            .slice(0)
-            .reverse()
-            .map((items, index) => {
-              return (
-                <EachNotice
-                  key={index}
-                  link={items.link}
-                  notice={items.notice}
-                  date={items.createdAt}
-                  myDeleteFunction={() => deleteOneNotice(items._id)}
+            <div className="flex flex-col justify-between w-1/2 px-10">
+              <div className="">
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg"
+                  className="h-8"
+                  id="image"
+                  name="image"
+                  onBlur={formik.handleBlur}
+                  onChange={(event) => {
+                    const file = event.target.files;
+                    let myFiles = Array.from(file);
+                    formik.setFieldValue("image", myFiles[0]);
+                    console.log(myFiles);
+                  }}
                 />
-              );
-            })}
+              </div>
+              <div>
+                <button
+                  className="h-8 mb-1 font-bold bg-green-400 rounded w-60"
+                  type="submit"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </form>
+          {submitted && (
+            <div className="text-sm text-center text-green-700">
+              New Notice Added!
+            </div>
+          )}
+        </div>
+
+        <div className="pb-40 mx-32">
+          <div className="flex flex-row justify-between py-3 text-xl font-bold bg-blue-400 shadow-2xl">
+            <div className="px-4">NOTICE</div>
+            <div className="pr-28">DATE</div>
+          </div>
+          <div>
+            {mynotice
+              .slice(0)
+              .reverse()
+              .map((items, index) => {
+                return (
+                  <EachNotice
+                    key={index}
+                    link={items.link}
+                    notice={items.notice}
+                    date={items.createdAt}
+                    myDeleteFunction={() => deleteOneNotice(items._id)}
+                  />
+                );
+              })}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default notice;
